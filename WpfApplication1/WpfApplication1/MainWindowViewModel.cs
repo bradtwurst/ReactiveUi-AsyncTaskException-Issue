@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
+using System.Windows;
 
 namespace WpfApplication1
 {
@@ -19,8 +20,7 @@ namespace WpfApplication1
                 .Select(ex =>
                     new UserError("Message", "Resolution"))
                 .SelectMany(UserError.Throw)
-                .Where(x => x == RecoveryOptionResult.RetryOperation)
-                .InvokeCommand(TaskCommand);
+                .Subscribe(result => MessageBox.Show(result.ToString()));
 
             ObsCommand = ReactiveCommand.CreateAsyncObservable(_ => Observable.Throw<Unit>(new Exception("DIE")));
             ObsCommand.Subscribe(x => { var dummy = x; });
@@ -28,8 +28,7 @@ namespace WpfApplication1
                 .Select(ex =>
                     new UserError("Message", "Resolution"))
                 .SelectMany(UserError.Throw)
-                .Where(x => x == RecoveryOptionResult.RetryOperation)
-                .InvokeCommand(ObsCommand);
+                .Subscribe(result => MessageBox.Show(result.ToString()));
 
         }
 
